@@ -1,42 +1,42 @@
-import { motion } from 'framer-motion'
-
-import BackgroundFX from '../components/layout/BackgroundFX'
 import ProjectCard from '../components/sections/ProjectCard'
 import { projects } from '../data/projects'
 
 export default function Projects() {
   return (
-    <div className="relative">
-      <BackgroundFX />
+    <div className="relative" style={{ padding: '120px 60px 80px' }}>
+      <div className="max-w-[1200px] mx-auto">
+        <p
+          className="font-mono text-[11px] font-medium uppercase tracking-[0.2em] mb-4 flex items-center gap-3 justify-center"
+          style={{ color: 'var(--cyan)' }}
+        >
+          <span className="block h-px w-6" style={{ background: 'var(--cyan)' }} />
+          Portfólio
+        </p>
+        <h1
+          className="font-display font-bold leading-[1.1] tracking-[-0.02em] text-center mb-5"
+          style={{ fontSize: 'clamp(28px, 3vw, 42px)' }}
+        >
+          Todos os <span style={{ color: 'var(--cyan)' }}>projetos</span>
+        </h1>
+        <p
+          className="text-center font-light leading-[1.7] max-w-[640px] mx-auto"
+          style={{ fontSize: 15, color: 'var(--text-muted)' }}
+        >
+          Coleção dos trabalhos em que venho atuando — da pesquisa ao deploy. Cada card abre uma
+          página com detalhes técnicos, métricas e (quando aplicável) uma demo interativa.
+        </p>
 
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 pt-28 pb-16 relative">
-        <section className="section-card px-6 sm:px-12 py-14 md:py-20">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="text-center mb-12"
-          >
-            <h1 className="font-display text-4xl md:text-5xl font-extrabold gold-text inline-block mb-5">
-              Portfólio
-            </h1>
-            <p className="text-ink2 max-w-2xl mx-auto leading-relaxed">
-              Coleção dos trabalhos em que venho atuando — da pesquisa ao deploy. Cada
-              card abre uma página com detalhes técnicos, métricas e (quando aplicável)
-              uma demo interativa.
-            </p>
-          </motion.div>
-
+        <div className="mt-14">
           {projects.length === 0 ? (
             <EmptyState />
           ) : (
-            <div className="grid md:grid-cols-2 gap-5 max-w-4xl mx-auto">
-              {projects.map((p, i) => (
-                <ProjectCard key={p.slug} project={p} index={i} />
+            <div className="grid md:grid-cols-2 gap-6 max-w-[1000px] mx-auto">
+              {projects.map((p) => (
+                <ProjectCard key={p.slug} project={p} />
               ))}
             </div>
           )}
-        </section>
+        </div>
       </div>
     </div>
   )
@@ -44,8 +44,15 @@ export default function Projects() {
 
 function EmptyState() {
   return (
-    <div className="p-10 text-center bg-panel border border-[rgba(201,168,122,0.18)] rounded-2xl max-w-2xl mx-auto">
-      <p className="text-ink3">Nenhum projeto cadastrado ainda.</p>
+    <div
+      className="rounded-2xl text-center max-w-[640px] mx-auto"
+      style={{
+        padding: 40,
+        background: 'var(--glass)',
+        border: '1px solid var(--border)',
+      }}
+    >
+      <p style={{ color: 'var(--text-muted)' }}>Nenhum projeto cadastrado ainda.</p>
     </div>
   )
 }

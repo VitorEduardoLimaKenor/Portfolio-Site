@@ -1,73 +1,75 @@
-import { motion } from 'framer-motion'
-import { NavLink, Link, useLocation } from 'react-router-dom'
+import { useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
 
 const navItems = [
-  { to: '/',         label: 'Home', end: true },
-  { to: '/#sobre',   label: 'Sobre' },
-  { to: '/projetos', label: 'Portfólio' },
+  { href: '#about',      label: 'about' },
+  { href: '#skills',     label: 'skills' },
+  { href: '#projects',   label: 'projects' },
+  { href: '#experience', label: 'experience' },
+  { href: '#contact',    label: 'contact' },
 ]
 
 export default function Header() {
-  const { pathname, hash } = useLocation()
+  const [scrolled, setScrolled] = useState(false)
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 40)
+    window.addEventListener('scroll', onScroll, { passive: true })
+    onScroll()
+    return () => window.removeEventListener('scroll', onScroll)
+  }, [])
 
   return (
-    <motion.header
-      initial={{ y: -40, opacity: 0 }}
-      animate={{ y: 0, opacity: 1 }}
-      transition={{ duration: 0.5 }}
-      className="fixed top-0 left-0 right-0 z-50 backdrop-blur-md bg-page/70 border-b border-[rgba(201,168,122,0.12)]"
+    <nav
+      className={`fixed top-0 left-0 right-0 z-[100] flex items-center justify-between border-b transition-[padding] duration-300
+        ${scrolled ? 'py-[14px]' : 'py-[20px]'}`}
+      style={{
+        paddingLeft: 60, paddingRight: 60,
+        background: 'rgba(8,11,20,0.7)',
+        backdropFilter: 'blur(20px)',
+        WebkitBackdropFilter: 'blur(20px)',
+        borderColor: 'var(--border)',
+      }}
     >
-      <div className="max-w-6xl mx-auto px-6 py-4">
-        <div className="flex items-center justify-between gap-6">
-          <Link to="/" className="flex items-center gap-2 group">
-            <span className="font-display text-2xl font-extrabold tracking-tight gold-text">
-              VK
-            </span>
-          </Link>
+      <Link to="/" className="font-mono text-[15px] font-medium tracking-wider no-underline" style={{ color: 'var(--cyan)' }}>
+        vitor<span style={{ color: 'var(--cyan)' }}>.dev</span>
+      </Link>
 
-          <nav className="hidden md:flex items-center gap-1">
-            {navItems.map((item) => {
-              const isActive = item.end
-                ? pathname === '/' && !hash
-                : item.to.startsWith('/#')
-                  ? pathname === '/' && hash === item.to.slice(1)
-                  : pathname.startsWith(item.to)
+      <ul className="hidden md:flex items-center gap-9 list-none">
+        {navItems.map((it) => (
+          <li key={it.href}>
+            <a
+              href={it.href}
+              className="relative font-mono text-[12px] uppercase tracking-[0.1em] transition-colors group"
+              style={{ color: 'var(--text-muted)', textDecoration: 'none' }}
+              onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--cyan)')}
+              onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--text-muted)')}
+            >
+              {it.label}
+              <span
+                className="absolute -bottom-1 left-0 right-0 h-px origin-left scale-x-0 transition-transform duration-200 group-hover:scale-x-100"
+                style={{ background: 'var(--cyan)' }}
+              />
+            </a>
+          </li>
+        ))}
+      </ul>
 
-              return item.to.startsWith('/#') ? (
-                <a
-                  key={item.to}
-                  href={item.to}
-                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-                    isActive ? 'text-cream' : 'text-ink2 hover:text-white'
-                  }`}
-                >
-                  {item.label}
-                </a>
-              ) : (
-                <NavLink
-                  key={item.to}
-                  to={item.to}
-                  end={item.end}
-                  className={({ isActive: navActive }) =>
-                    `px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-                      navActive ? 'text-cream' : 'text-ink2 hover:text-white'
-                    }`
-                  }
-                >
-                  {item.label}
-                </NavLink>
-              )
-            })}
-          </nav>
-
-          <a
-            href="#contato"
-            className="px-4 py-2 rounded-full text-sm font-semibold bg-cream text-page hover:bg-goldL transition-colors shadow-[0_8px_24px_-8px_rgba(251,231,196,0.5)]"
-          >
-            Contato
-          </a>
-        </div>
-      </div>
-    </motion.header>
+      <a
+        href="#contact"
+        className="font-mono text-[12px] font-medium uppercase tracking-[0.08em] px-[18px] py-2 rounded transition-all"
+        style={{ color: 'var(--bg)', background: 'var(--cyan)', textDecoration: 'none' }}
+        onMouseEnter={(e) => {
+          e.currentTarget.style.background = 'var(--indigo)'
+          e.currentTarget.style.boxShadow = '0 0 20px rgba(129,140,248,0.4)'
+        }}
+        onMouseLeave={(e) => {
+          e.currentTarget.style.background = 'var(--cyan)'
+          e.currentTarget.style.boxShadow = 'none'
+        }}
+      >
+        hire me
+      </a>
+    </nav>
   )
 }

@@ -1,67 +1,103 @@
-import { motion } from 'framer-motion'
 import { ArrowUpRight, Github, Star } from 'lucide-react'
 
-export default function ProjectCard({ project, index = 0 }) {
+export default function ProjectCard({ project }) {
   const cardLink = project.externalUrl || project.repoUrl || '#'
 
   return (
-    <motion.article
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.5, delay: index * 0.08 }}
-      whileHover={{ y: -4 }}
-      className="group relative p-5 bg-gradient-to-br from-[#0e1424] to-[#0b1020] border border-[rgba(201,168,122,0.18)] rounded-2xl hover:border-[rgba(201,168,122,0.5)] hover:shadow-gold-glow transition-all overflow-hidden"
+    <article
+      className="group relative rounded-2xl overflow-hidden transition-all"
+      style={{
+        background: 'var(--glass)',
+        border: '1px solid var(--border)',
+        backdropFilter: 'blur(10px)',
+        padding: 24,
+      }}
+      onMouseEnter={(e) => {
+        e.currentTarget.style.borderColor = 'rgba(6,182,212,0.35)'
+        e.currentTarget.style.transform = 'translateY(-4px)'
+        e.currentTarget.style.boxShadow = '0 20px 60px rgba(0,0,0,0.4)'
+      }}
+      onMouseLeave={(e) => {
+        e.currentTarget.style.borderColor = 'var(--border)'
+        e.currentTarget.style.transform = 'translateY(0)'
+        e.currentTarget.style.boxShadow = 'none'
+      }}
     >
       {project.featured && (
-        <span className="absolute top-4 right-4 inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-[rgba(201,168,122,0.12)] text-goldL border border-[rgba(201,168,122,0.35)] z-10">
-          <Star className="w-3 h-3" /> Destaque
+        <span
+          className="absolute top-4 right-4 inline-flex items-center gap-1 rounded-full font-mono text-[10px] font-semibold z-10"
+          style={{
+            background: 'var(--cyan-dim)',
+            color: 'var(--cyan)',
+            border: '1px solid rgba(6,182,212,0.35)',
+            padding: '2px 8px',
+          }}
+        >
+          <Star size={12} /> Destaque
         </span>
       )}
 
       {project.cover && (
-        <div className="aspect-[16/9] mb-5 rounded-xl overflow-hidden ring-1 ring-[rgba(201,168,122,0.2)] bg-[#0a1322]">
+        <div
+          className="aspect-[16/9] mb-5 rounded-xl overflow-hidden"
+          style={{
+            background: 'rgba(6,182,212,0.04)',
+            border: '1px solid rgba(6,182,212,0.12)',
+          }}
+        >
           <img
             src={project.cover}
             alt={project.title}
-            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
           />
         </div>
       )}
 
-      <div className="space-y-3">
-        <div className="flex items-center gap-2 text-xs text-ink3">
+      <div className="flex flex-col gap-3">
+        <div className="flex items-center gap-2 font-mono text-[11px]" style={{ color: 'var(--text-muted)' }}>
           {project.year && <span>{project.year}</span>}
           {project.year && project.tags?.[0] && <span>•</span>}
-          <span className="text-goldL">{project.tags?.[0]}</span>
+          <span style={{ color: 'var(--cyan)' }}>{project.tags?.[0]}</span>
         </div>
 
-        <h3 className="font-display text-xl font-bold text-white group-hover:text-cream transition-colors">
+        <h3 className="text-[20px] font-semibold tracking-[-0.01em]" style={{ color: 'var(--text)' }}>
           {project.title}
         </h3>
-        <p className="text-ink2 text-sm leading-relaxed line-clamp-3">
+        <p className="text-[14px] font-light leading-[1.7] line-clamp-3" style={{ color: 'var(--text-muted)' }}>
           {project.tagline}
         </p>
 
-        <div className="flex flex-wrap gap-1.5 pt-1">
-          {project.techStack?.slice(0, 5).map((tech) => (
+        <div className="flex flex-wrap gap-[6px] pt-1">
+          {(project.techStack || []).slice(0, 5).map((tech) => (
             <span
               key={tech}
-              className="px-2 py-0.5 rounded-full text-[11px] text-ink2 border border-[rgba(201,168,122,0.18)] bg-[#0a1322]"
+              className="font-mono text-[11px] rounded"
+              style={{
+                color: 'var(--indigo)',
+                background: 'var(--indigo-dim)',
+                border: '1px solid rgba(129,140,248,0.2)',
+                padding: '3px 10px',
+              }}
             >
               {tech}
             </span>
           ))}
         </div>
 
-        <div className="flex items-center justify-between pt-3 border-t border-[rgba(201,168,122,0.15)]">
+        <div
+          className="flex items-center justify-between pt-3"
+          style={{ borderTop: '1px solid var(--border)' }}
+        >
           <a
             href={cardLink}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-1 text-sm font-medium text-cream hover:text-goldL transition-colors"
+            className="inline-flex items-center gap-1 font-mono text-[13px] font-medium transition-colors"
+            style={{ color: 'var(--cyan)', textDecoration: 'none' }}
+            onMouseEnter={(e) => (e.currentTarget.style.color = '#22d3ee')}
+            onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--cyan)')}
           >
-            Ver projeto <ArrowUpRight className="w-4 h-4" />
+            Ver projeto <ArrowUpRight size={14} />
           </a>
 
           {project.repoUrl && (
@@ -69,14 +105,23 @@ export default function ProjectCard({ project, index = 0 }) {
               href={project.repoUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="p-1.5 rounded-md text-ink3 hover:text-white hover:bg-white/5 transition-colors"
               aria-label="Repositório no GitHub"
+              className="p-[6px] rounded-md transition-colors"
+              style={{ color: 'var(--text-muted)' }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.color = 'var(--text)'
+                e.currentTarget.style.background = 'rgba(255,255,255,0.05)'
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.color = 'var(--text-muted)'
+                e.currentTarget.style.background = 'transparent'
+              }}
             >
-              <Github className="w-4 h-4" />
+              <Github size={16} />
             </a>
           )}
         </div>
       </div>
-    </motion.article>
+    </article>
   )
 }
